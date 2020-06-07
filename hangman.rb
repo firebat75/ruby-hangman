@@ -74,3 +74,42 @@ else
     puts "You had #{correct}"
     puts "YOU LOSE"
 end
+
+class Hangman
+    def init(lives = 10, guesses = [], right_guesses = [], wrong_guesses = [], progress = [], round = 0, word = "")
+        @lives = lives
+        @guesses = guesses
+        @right_guesses = right_guesses
+        @wrong_guesses = wrong_guesses
+        @progress = progress
+        @round = round
+        @word = word
+    end
+
+    def state
+        puts "##########" + "#" * @round.to_s.length
+        puts "# Round #{@round} #"
+        puts "##########" + "#" * @round.to_s.length
+        puts "Lives Left: ([#{"❤" * @lives}] #{@lives})"
+        puts "Progress: #{@progress}"
+        puts "Correct guesses  : #{@right_guesses}"
+        puts "Incorrect guesses: #{@wrong_guesses}"
+    end
+
+    def play_round(guess)
+        round += 1
+        if @word.include? guess
+            right_guesses << guess
+            while @word.include? guess
+                progress[@word.index(guess)] = guess
+                @word[@word.index(guess)] = "."
+            end
+            return true
+        else
+            wrong_guesses << guess
+            lives -= 1
+            return false
+        end
+    end
+
+end
