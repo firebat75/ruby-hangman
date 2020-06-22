@@ -1,6 +1,6 @@
 puts "hangman.rb loaded"
 
-require erb
+require 'json'
 
 class Hangman
     def initialize (lives = 10, guesses = [], right_guesses = [], wrong_guesses = [], progress = [], round = 0, word)
@@ -26,8 +26,8 @@ class Hangman
         puts "##########" + "#" * @round.to_s.length
         puts "# Round #{@round} #"
         puts "##########" + "#" * @round.to_s.length
-        puts "Lives Left: ([#{"❤" * @lives}] #{@lives})"
-        puts "Progress: #{@progress.join}"
+        puts "Lives Left       : ([#{"❤" * @lives}] #{@lives})"
+        puts "Progress         : #{@progress.join}"
         puts "Correct guesses  : #{@right_guesses}"
         puts "Incorrect guesses: #{@wrong_guesses}"
     end
@@ -52,13 +52,22 @@ class Hangman
         return word == "." * @word.length
     end
 
-    def save_as(save)
+    def save_as(name)
         Dir.mkdir("saves") unless Dir.exists?("saves")
 
-        filename = "saves/#{save}.txt"
+        filename = "saves/#{name}.json"
     end
 
 end
+
+def open_save(filename)
+    file = File.read(filename)
+
+    save = JSON.parse(file)
+
+    return Hangman.new(save["lives"], save["guesses"], save["right_guesses"], save["wrong_guesses"], save["progress"], save["round"], save["word"])
+end
+
 
 def get_word
     words = File.readlines "5desk.txt"

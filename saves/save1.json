@@ -1,0 +1,9 @@
+{
+    "lives":7,
+    "guesses":["T","A","B","C"],
+    "right_guesses":["T"],
+    "wrong_guesses":["A","B","C"],
+    "progress":["_","_","T","_","_"],
+    "round":4,
+    "word":"LI.RE"
+}
