@@ -54,14 +54,27 @@ class Hangman
 
     def save_as(name)
         Dir.mkdir("saves") unless Dir.exists?("saves")
-
         filename = "saves/#{name}.json"
+
+        state = {
+            "lives" => @lives,
+            "guesses" => @guesses,
+            "right_guesses" => @right_guesses,
+            "wrong_guesses" => @wrong_guesses,
+            "progress" => @progress,
+            "round" => @round,
+            "word" => @word
+        }
+
+        File.open(filename, "w") do |f|
+            f.write(state.to_json)
+        end
     end
 
 end
 
-def open_save(filename)
-    file = File.read(filename)
+def open_save(file_path)
+    file = File.read(file_path)
 
     save = JSON.parse(file)
 
