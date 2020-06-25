@@ -1,11 +1,9 @@
-puts "hangman.rb loaded"
-
 require 'json'
 
 class Hangman
-    def initialize (lives = 10, guesses = [], right_guesses = [], wrong_guesses = [], progress = [], round = 0, word)
+    def initialize (lives = 10, guesses = [], right_guesses = [], wrong_guesses = [], progress = [], round = 0, word, original)
         '''
-        New game just needs the word argument
+        New game just needs the word and original arguments
         '''
         @lives = lives
         @guesses = guesses
@@ -18,9 +16,10 @@ class Hangman
         end
         @round = round
         @word = word
+        @original = original
     end
 
-    attr_accessor :lives, :guesses, :right_guesses, :wrong_guesses, :progress, :round, :word
+    attr_accessor :lives, :guesses, :right_guesses, :wrong_guesses, :progress, :round, :word, :original
 
     def state
         puts "##########" + "#" * @round.to_s.length
@@ -49,7 +48,11 @@ class Hangman
     end
 
     def check_win()
-        return word == "." * @word.length
+        return @word == "." * @word.length
+    end
+
+    def check_lose()
+        return @lives < 1
     end
 
     def save_as(name)
@@ -63,14 +66,14 @@ class Hangman
             "wrong_guesses" => @wrong_guesses,
             "progress" => @progress,
             "round" => @round,
-            "word" => @word
+            "word" => @word,
+            "original" => @original
         }
 
         File.open(filename, "w") do |f|
             f.write(state.to_json)
         end
     end
-
 end
 
 def open_save(file_path)
@@ -78,7 +81,7 @@ def open_save(file_path)
 
     save = JSON.parse(file)
 
-    return Hangman.new(save["lives"], save["guesses"], save["right_guesses"], save["wrong_guesses"], save["progress"], save["round"], save["word"])
+    return Hangman.new(save["lives"], save["guesses"], save["right_guesses"], save["wrong_guesses"], save["progress"], save["round"], save["word"], save["original"])
 end
 
 
@@ -89,4 +92,54 @@ def get_word
         x = rand(0..words.length)
     end
     return words[x][0..-3].upcase
+end
+
+def play_game(hangman)
+    while !hangman.check_win && !hangman.check_lose
+
+        puts hangman.state
+
+        print "Would you like to save your progress?\n[1] Yes\n[2] No\nchoose by entering the option's number: "
+        sv = gets.chomp
+
+        while sv != "1" && sv != "2"
+            puts "invalid selection"
+            print "Would you like to save your progress?\n[1] Yes\n[2] No\nchoose by entering the option's number: "
+            sv = gets.chomp
+        end
+
+        if sv == 1
+            print "Enter save name: "
+            nm = gets.chomp
+            hangman.save_as(nm)
+            puts "Successfully saved as #{nm}"
+        end
+
+        print "Guess a letter: "
+        guess = gets.chomp.upcase
+
+        while !(guess.length == 1 && guess =~ /[A-Z]/)
+            print "Invalid input, try again: "
+            guess = gets.chomp.upcase
+        end
+
+        g = hangman.play_round(guess)
+
+        if g
+            puts "Correct! the word contains #{guess}"
+        else
+            puts "Incorrect! the word does not contain #{guess}"
+
+    end
+
+    end
+
+    puts "The word was #{hangman.original}"
+
+    if hangman.check_win
+        puts "YOU WIN!"
+    elsif hangman.check_lose
+        puts "YOU LOSE!"
+    end
+    
 end
