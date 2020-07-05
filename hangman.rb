@@ -99,12 +99,12 @@ def play_game(hangman)
 
         puts hangman.state
 
-        print "Would you like to save your progress?\n[1] Yes\n[2] No\nchoose by entering the option's number: "
+        print "Make a selection\n[1] Save Game\n[2] Make a guess\nchoose by entering the option's number: "
         sv = gets.chomp
 
         while sv != "1" && sv != "2"
             puts "invalid selection"
-            print "Would you like to save your progress?\n[1] Yes\n[2] No\nchoose by entering the option's number: "
+            print "Make a selection\n[1] Save Game\n[2] Make a guess\nchoose by entering the option's number: "
             sv = gets.chomp
         end
 
@@ -117,6 +117,11 @@ def play_game(hangman)
 
         print "Guess a letter: "
         guess = gets.chomp.upcase
+
+        while hangman.guesses.include? guess
+            print "You already guessed #{guess}, try again: "
+            guess = gets.chomp.upcase
+        end
 
         while !(guess.length == 1 && guess =~ /[A-Z]/)
             print "Invalid input, try again: "
