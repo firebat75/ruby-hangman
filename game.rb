@@ -19,7 +19,7 @@ if input == "2"
     for item in saves
         print "[#{opt}] "
         opt += 1
-        puts item[0..-5]
+        puts item[0..-6]
     end
 
     print "choose by entering the option's number: "
@@ -37,4 +37,11 @@ if input == "2"
     opened = open_save("saves/#{saves[input.to_i - 1]}")
 
     play_game(opened)
+end
+
+if input == "1"
+    word = get_word
+    game = Hangman.new(word, word[0..-1])
+
+    play_game(game)
 end

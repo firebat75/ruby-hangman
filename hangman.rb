@@ -33,6 +33,7 @@ class Hangman
 
     def play_round(guess)
         @round += 1
+        @guesses << guess
         if @word.include? guess
             @right_guesses << guess
             while @word.include? guess
@@ -45,6 +46,7 @@ class Hangman
             @lives -= 1
             return false
         end
+        
     end
 
     def check_win()
@@ -108,7 +110,7 @@ def play_game(hangman)
             sv = gets.chomp
         end
 
-        if sv == 1
+        if sv == "1"
             print "Enter save name: "
             nm = gets.chomp
             hangman.save_as(nm)
