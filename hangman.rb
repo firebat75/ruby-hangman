@@ -21,7 +21,7 @@ class Hangman
 
     attr_accessor :lives, :guesses, :right_guesses, :wrong_guesses, :progress, :round, :word, :original
 
-    def state
+    def state #puts information about the game
         puts "##########" + "#" * @round.to_s.length
         puts "# Round #{@round} #"
         puts "##########" + "#" * @round.to_s.length
@@ -31,7 +31,7 @@ class Hangman
         puts "Incorrect guesses: #{@wrong_guesses}"
     end
 
-    def play_round(guess)
+    def play_round(guess) #returns bool whether the guess is correct or not
         @round += 1
         @guesses << guess
         if @word.include? guess
@@ -57,7 +57,7 @@ class Hangman
         return @lives < 1
     end
 
-    def save_as(name)
+    def save_as(name) #saves the current gamestate as a json
         Dir.mkdir("saves") unless Dir.exists?("saves")
         filename = "saves/#{name}.json"
 
@@ -87,7 +87,7 @@ def open_save(file_path)
 end
 
 
-def get_word
+def get_word #generates a random word from 5desk.txt
     words = File.readlines "5desk.txt"
     x = 0
     while words[x].length < 7 || words[x].length > 14
@@ -96,7 +96,7 @@ def get_word
     return words[x][0..-3].upcase
 end
 
-def play_game(hangman)
+def play_game(hangman) #asks if you want to save, then runs play_round() until the game ends
     while !hangman.check_win && !hangman.check_lose
 
         puts hangman.state
